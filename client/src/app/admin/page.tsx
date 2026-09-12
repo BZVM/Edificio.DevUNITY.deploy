@@ -1,5 +1,5 @@
 "use client";
-
+// Sincronización con rama deploy
 import { useEffect, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 
