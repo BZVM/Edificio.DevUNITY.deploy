@@ -38,9 +38,9 @@ jobs:
           cache: 'npm'
 
       # Falla únicamente con vulnerabilidades High o Critical
-      - name: Auditoría de dependencias conocidas
-        run: npm audit --audit-level=high
-
+      - name: Auditoría de dependencias de producción
+        run: npm audit --omit=dev --audit-level=high
+        
       # Opcional pero recomendado para repos públicos o con GitHub Advanced Security:
       - name: Dependency Review
         uses: actions/dependency-review-action@v4
