@@ -1,22 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-// 1. FALLA GITLEAKS: Token con formato reconocible (clave falsa de prueba)
-const STRIPE_SECRET_KEY = "sk_test_51Mz00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+type AllowedStatus = 'pending' | 'completed' | 'failed';
 
-export const PaymentStatus = ({ status }: { status: string }) => {
-  // 2. FALLA TYPESCRIPT / LINT: Variable tipada incorrectamente y no utilizada
-  const retryCount: number = "tres"; // Type 'string' is not assignable to type 'number'
-  const unusedVariable = 42;         // Falla @typescript-eslint/no-unused-vars
+interface PaymentStatusProps {
+  status: AllowedStatus;
+  retryCount?: number;
+}
 
-  const rawHtmlWarning = `<p>Alerta: el pago está en estado: ${status}</p>`;
+export const PaymentStatus: React.FC<PaymentStatusProps> = ({
+  status,
+  retryCount = 0,
+}) => {
+  // Manejo de variables públicas sin exponer secretos
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.dominio.com';
 
   return (
-    <div>
+    <section aria-label="Resumen de pago" className="payment-status-card">
       <h3>Estado de Transacción</h3>
-      {/* 3. FALLA SAST (Semgrep / CodeQL): Inyección XSS mediante innerHTML */}
-      <div dangerouslySetInnerHTML={{ __html: rawHtmlWarning }} />
-      
-      <p>Clave interna: {STRIPE_SECRET_KEY}</p>
-    </div>
+      <p>
+        Estado actual: <strong>{status}</strong>
+      </p>
+      {retryCount > 0 && <p>Intentos realizados: {retryCount}</p>}
+      <small>Servicio conectado a: {apiUrl}</small>
+    </section>
   );
 };
